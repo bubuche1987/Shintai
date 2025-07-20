@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executable Format Specification</title>
+</head>
+<body>
+<h1>Executable Format Specification</h1>
+
+<h2>Overview</h2>
+<p>
+The executable format is designed to support modularity and efficient function lookup. 
+It consists of several tables, some of which are global and others defined per module. 
+Tables use implicit indices for their first columns, starting at 0 and incrementing by one for each row.
+</p>
+
+<h2>File Header</h2>
+<ul>
+    <li><strong>Magic string:</strong> Identifies the file as a valid executable (exact value TBD).</li>
+    <li><strong>Version:</strong> Executable format version number.</li>
+</ul>
+
+<h2>Global Tables</h2>
+
+<h3>1. global_to_local</h3>
+<p>
+Maps a function's <em>global_id</em> to the module and local function identifier.
+</p>
+<ul>
+    <li><strong>Columns:</strong> <em>global_id</em> (implicit), <code>module_id</code>, <code>local_id</code>.</li>
+</ul>
+
+<h3>2. modules</h3>
+<p>
+Describes each module contained in the executable.
+</p>
+<ul>
+    <li><strong>Columns:</strong> <em>module_id</em> (implicit), number of table entries, <code>first_extern_function</code>.</li>
+    <li><strong>Optional:</strong> <code>string_id</code> pointing to module name in the string block.</li>
+</ul>
+
+<h3>3. entry_points</h3>
+<p>
+Lists the entry points of the executable.
+</p>
+<ul>
+    <li><strong>Columns:</strong> pairs of (<code>module_id</code>, <code>local_id</code>).</li>
+</ul>
+
+<h3>4. string_ends (optional)</h3>
+<p>
+Defines the end offsets of strings stored in the string block.
+</p>
+<ul>
+    <li><strong>Columns:</strong> <em>string_id</em> (implicit), string end offset.</li>
+</ul>
+
+<h2>Per-Module Tables</h2>
+
+<h3>1. function_ends</h3>
+<p>
+Defines the layout of functions within the module's function block.
+</p>
+<ul>
+    <li><strong>Columns:</strong> <em>local_id</em> (implicit), function end offset.</li>
+    <li>Function start offsets are determined by the previous function's end.</li>
+    <li><strong>Optional:</strong> <code>string_id</code> referencing the function's name.</li>
+</ul>
+
+<h3>2. extern_to_global</h3>
+<p>
+Maps an <em>extern_id</em> within the module to the <em>global_id</em> of a function.
+</p>
+<ul>
+    <li><strong>Columns:</strong> <em>extern_id</em> (implicit), <code>global_id</code>.</li>
+</ul>
+
+<h2>Function Lookup: Magic Number Mechanism</h2>
+<p>
+Functions are called using a <em>magic number</em>, which the VM resolves into (<code>module_id</code>, <code>local_id</code>) as follows:
+</p>
+<pre>
+if (magic_number &lt; first_extern_function) {
+    module_id = current_module_id;
+    local_id = magic_number;
+} else {
+    extern_id = magic_number - first_extern_function;
+    global_id = extern_to_global[extern_id];
+    (module_id, local_id) = global_to_local[global_id];
+}
+// Use (module_id, local_id) to jump to the function
+</pre>
+
+<h2>String Storage</h2>
+<p>
+If any table references <code>string_id</code>, a global string block is present. 
+String ends are stored in the <em>string_ends</em> table, enabling string reconstruction by slicing from the previous end offset.
+</p>
+
+</body>
+</html>
