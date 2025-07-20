@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assembly Language Specification</title>
+</head>
+<body>
+<h1>Assembly Language Documentation</h1>
+
+<h2>Overview</h2>
+<p>
+There are two closely related assembly languages: one using 12-bit instructions and a simplified version using 6-bit instructions. 
+This document focuses on the 12-bit version. Both versions implement a register-based architecture supporting the programming language described previously.
+</p>
+
+<h2>Registers</h2>
+<ul>
+    <li><strong>Registers:</strong> <code>left</code>, <code>right</code>, <code>param1</code> (16 bits each). A potential <code>result</code> register may be added.</li>
+    <li><strong>Usage:</strong> Binary operations read operands from memory addresses stored in <code>left</code> and <code>right</code>.</li>
+    <li><strong>Result storage:</strong> 
+        <ul>
+            <li>If <code>result</code> register exists, results are stored at the address in <code>result</code>.</li>
+            <li>Otherwise, results overwrite the value at the address in <code>left</code>.</li>
+        </ul>
+    </li>
+    <li>Registers are often reset (zeroed) on jumps, function calls, syscalls, or when selected.</li>
+</ul>
+
+<h2>ALU</h2>
+<ul>
+    <li><strong>Stateful design:</strong> The ALU maintains a current operand type.</li>
+    <li><strong>Supported types:</strong> <code>u8</code>, <code>i8</code>, <code>u16</code>, <code>i16</code>, <code>u32</code>, <code>i32</code>, <code>f32</code>.</li>
+    <li>Type changes occur through instructions that simultaneously cast values, update ALU type, and copy data.</li>
+</ul>
+
+<h3>Type Conversion and Copy Command</h3>
+<p>
+A single command performs type casting, ALU type changes, and data copying. It uses two 4-bit type codes (source and destination) in its 8-bit payload.
+</p>
+<pre>
+(destination*) left = (source*) right;
+left += sizeof(destination);
+right += sizeof(source);
+type_of_ALU = destination;
+</pre>
+<ul>
+    <li>If source == destination and left == right: only ALU type is set; registers may not increment (not decided yet).</li>
+    <li>If source == destination and left != right: data is copied from addres in <code>right</code> to address in <code>left</code>, then registers increment.</li>
+    <li>If source != destination: value is cast from source to destination type, stored at address in <code>left</code>, then registers increment.</li>
+</ul>
+<p>This mechanism enables efficient vector and tuple operations, as registers act like cursors.</p>
+
+<h2>Instruction Format</h2>
+<ul>
+    <li><strong>12-bit instructions:</strong> 4 most significant bits = command family; 8 least significant bits = payload.</li>
+    <li><strong>Operator commands:</strong> A single family supports all operators (<256 operators).</li>
+</ul>
+
+<h2>6-bit Version Differences</h2>
+<ul>
+    <li>Registers are zeroed upon selection.</li>
+    <li>Commands push nibbles into registers.</li>
+    <li>In the 12-bit version, there are commands that select a register and push a byte simultaneously.</li>
+    <li>In the 12-bit version, either a command pushes a byte in the currently selected register or re-selecting the same register pushes bytes.</li>
+</ul>
+
+<h2>Memory Model</h2>
+<ul>
+    <li><strong>Data flow:</strong> Instructions → Registers → Stack ↔ ALU.</li>
+    <li><strong>Addresses:</strong> 
+        <ul>
+            <li>Relative to the beginning of the function: address 0 = return value, followed by the parameter, then local variables.</li>
+            <li>If LSB of an address = 0: address is function-relative.</li>
+            <li>If LSB = 1: address refers to a static variable in the current module.</li>
+        </ul>
+    </li>
+    <li><strong>Indirect memory access:</strong> Supported by loading/storing data at addresses stored in memory locations referenced by registers. 
+    Enables pointers and array indexing when target addresses are not compile-time constants.</li>
+</ul>
+
+<h2>Control Flow</h2>
+<ul>
+    <li>Jumps are relative to the first instruction of the function.</li>
+    <li>Jumping to instruction 0 restarts the function.</li>
+</ul>
+
+<h2>Stack Usage and Parallelism</h2>
+<p>
+Since the language forbids recursion, VLAs, and dynamic allocation, each function's maximum stack usage is known at compile time. 
+This enables safe parallel function calls by allocating non-overlapping stack regions.
+</p>
+
+<h2>Function Calls</h2>
+<ul>
+    <li>To call a function:
+        <ol>
+            <li>Load the function's magic number into <code>right</code>.</li>
+            <li>Load the return value's address into <code>left</code>.</li>
+            <li>Invoke the appropriate syscall.</li>
+        </ol>
+    </li>
+    <li>The magic number mechanism will be described in the next section.</li>
+</ul>
+
+</body>
+</html>
