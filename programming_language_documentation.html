@@ -159,8 +159,12 @@ END
 </pre>
 
 <h3>Control Flow</h3>
-<p>No recursion is allowed. Loops (<code>for</code>, <code>while</code>) and conditional statements (<code>if</code>) are supported without special restrictions.</p>
+<p>No recursion is allowed. Loops (<code>for</code>, <code>while</code>) and conditional statements (<code>if</code>) are suppororted:</p>
 
+<pre>IF expression: instruction</pre>
+<pre>FOR symbol in expression_start ... expression_end: instruction</pre>
+<pre>WHILE expression: instruction</pre>
+    
 <h3>Sum Types</h3>
 <pre>
 SUM_TYPE
@@ -194,7 +198,7 @@ END
     <li><code>bool</code> is only compatible with itself.</li>
 </ul>
 
-<p>Examples:</p>
+<p>Operators also works on specific types. Examples:</p>
 <ul>
     <li><code>||</code> works on <code>bool</code>.</li>
     <li><code>&gt;</code> works on <code>u8</code>, <code>i8</code>, <code>u16</code>, etc.</li>
