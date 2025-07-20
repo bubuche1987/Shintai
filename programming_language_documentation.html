@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Programming Language Documentation</title>
+</head>
+<body>
+<h1>Programming Language Specification</h1>
+
+<h2>Overview</h2>
+<p>
+This programming language (PL) is a statically typed, stack-only language compiled to a custom assembly language. 
+It operates with a single stack and no heap, and function execution is limited to <em>n</em> steps per frame.
+This constraint enables aggressive compile-time optimizations such as constant evaluation of pure function calls.
+</p>
+
+<h2>Key Properties</h2>
+<ul>
+    <li><strong>Stack-only model:</strong> All data lives on a single stack. No heap or multiple stacks.</li>
+    <li><strong>Compiled to custom assembly:</strong> The underlying assembly language is register-based.</li>
+    <li><strong>Execution step limit:</strong> Functions may run for at most <em>n</em> steps each frame.</li>
+    <li><strong>Static typing:</strong> Types are resolved at compile time.</li>
+</ul>
+
+<h2>Syntax Overview</h2>
+
+<h3>Variable Declarations</h3>
+<pre>
+VARIABLES
+  name1: type1
+, name2: type2
+, ...
+END
+</pre>
+
+<h3>Type Aliases</h3>
+<pre>
+TYPEDEF
+  alias1: type1
+, alias2: type2
+, ...
+END
+</pre>
+
+<h3>Assignments</h3>
+<p>Assignments use <code>SET</code> blocks. Right-hand side (RHS) expressions in each block execute in parallel. 
+Impure function calls cannot coexist in the same block.</p>
+<pre>
+SET
+  lval1: rval1
+, lval2: rval2
+, ...
+WITH
+  symbol1: rval3
+, symbol2: rval4
+, ...
+END
+</pre>
+<p>Execution order: all <code>WITH</code> blocks are evaluated from last to first, then the <code>SET</code> block is applied.
+<code>WITH</code> blocks are optional.</p>
+<pre>
+SET
+  a: b
+, b: a
+END
+</pre>
+
+<h3>Tuples</h3>
+<p>Tuple type declaration:</p>
+<pre>
+(
+  symbol1: type1
+, symbol2: type2
+, ...
+)
+</pre>
+<p>Tuple value declaration:</p>
+<pre>
+(
+  symbol1: rval1
+, symbol2: rval2
+, ...
+)
+</pre>
+<p>The empty tuple is written <code>()</code>.</p>
+
+<h3>Vectors</h3>
+<p>Vector type declaration:</p>
+<pre>
+type^number_of_elements
+</pre>
+<p>Vector value declaration:</p>
+<pre>
+(
+  rval1
+, rval2
+, ...
+)
+</pre>
+<p>Minimum vector size is 2.</p>
+
+<h3>Functions</h3>
+<p>Functions take a single parameter and return a single value. Both can be tuples or vectors.</p>
+
+<p>Function header declarations:</p>
+<pre>
+FUNCTION_HEADERS
+  name1: in_type1:out_type1
+, name2: in_type2:out_type2
+, ...
+END
+</pre>
+
+<p>Function bodies:</p>
+<pre>
+FUNCTION_BODIES
+  name1: instruction1
+, name2: instruction2
+, ...
+END
+</pre>
+
+<p>Instruction blocks:</p>
+<pre>
+BEGIN
+  instruction1;
+  instruction2;
+  ...
+END
+</pre>
+
+<p>Example function body (increment input by 1):</p>
+<pre>
+SET out: in + 1 END
+</pre>
+
+<h3>Modules</h3>
+<p>Exporting functions:</p>
+<pre>
+EXPORT
+  out_name1: in_name1
+, out_name2: in_name2
+, ...
+END
+</pre>
+
+<p>Importing functions:</p>
+<pre>
+IMPORT
+  FROM module_name1
+    in_name1: out_name1
+  , in_name2: out_name2
+  FROM module_name2
+    ...
+END
+</pre>
+
+<h3>Control Flow</h3>
+<p>No recursion is allowed. Loops (<code>for</code>, <code>while</code>) and conditional statements (<code>if</code>) are supported without special restrictions.</p>
+
+<h3>Sum Types</h3>
+<pre>
+SUM_TYPE
+  symbol1: type1
+, symbol2: type2
+, ...
+END
+</pre>
+
+<p>Pattern matching:</p>
+<pre>
+MATCH value WITH
+  symbol1: x: statement1
+, symbol2: y: statement2
+, ...
+END
+</pre>
+
+<h2>Operator Compatibility</h2>
+<p>Operators can be applied to tuples and vectors if they are compatible:</p>
+<ul>
+    <li><strong>Tuples:</strong> Must have the same field names in the same order and compatible types.</li>
+    <li><strong>Vectors:</strong> Must have the same length and compatible element types.</li>
+</ul>
+
+<p>Type compatibility:</p>
+<ul>
+    <li><code>u8</code>, <code>i8</code>, <code>u16</code>, <code>i16</code>, <code>u32</code>, <code>i32</code> are compatible with each other.</li>
+    <li><code>u8</code>, <code>i8</code>, <code>u16</code>, <code>i16</code> are compatible with <code>f32</code>.</li>
+    <li><code>f32</code> is only compatible with itself.</li>
+    <li><code>bool</code> is only compatible with itself.</li>
+</ul>
+
+<p>Examples:</p>
+<ul>
+    <li><code>||</code> works on <code>bool</code>.</li>
+    <li><code>&gt;</code> works on <code>u8</code>, <code>i8</code>, <code>u16</code>, etc.</li>
+</ul>
+
+<h2>Pointers (References)</h2>
+<p>
+The language provides stack references ("pointers") that refer to variables on the stack. 
+Pointers cannot be assigned or returned, preventing dangling pointers.
+They can be passed to functions, and since assignments are forbidden, no invalid references persist after a function returns.
+</p>
+
+</body>
+</html>
