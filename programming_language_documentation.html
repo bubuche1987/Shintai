@@ -36,7 +36,7 @@ END
 
 <h3>Type Aliases</h3>
 <pre>
-TYPEDEF
+TYPEDEFS
   alias1: type1
 , alias2: type2
 , ...
@@ -132,7 +132,7 @@ BEGIN
 END
 </pre>
 
-<p>Example function body (increment input by 1):</p>
+<p>Inside the function, the parameter is named <code>in</code> and the return value <code>out</code>. Example function body (increment input by 1):</p>
 <pre>
 SET out: in + 1 END
 </pre>
@@ -158,29 +158,31 @@ IMPORT
 END
 </pre>
 
+<p><code>in_name</code> represents the name as seen from inside the module, <code>out_name</code> the name as seen from the outside of the module.</p>
+
 <h3>Control Flow</h3>
 <p>No recursion is allowed. Loops (<code>for</code>, <code>while</code>) and conditional statements (<code>if</code>) are suppororted:</p>
 
 <pre>
 IF 
-  expression1: instruction1
-, expression2: instruction2
+  condition1: instruction1
+, condition2: instruction2
 , ...
 END
 </pre>
     
 <pre>
 FOR 
-  symbol in expression_start1 ... expression_end1: instruction1
-, symbol in expression_start2 ... expression_end2: instruction2
+  symbol in start1 ... end1: instruction1
+, symbol in start2 ... end2: instruction2
 , ...
 END
 </pre>
     
 <pre>
 WHILE 
-  expression1: instruction1
-, expression2: instruction2
+  condition1: instruction1
+, condition2: instruction2
 , ...
 END
 </pre>
@@ -197,8 +199,8 @@ END
 <p>Pattern matching:</p>
 <pre>
 MATCH value WITH
-  symbol1: x: statement1
-, symbol2: y: statement2
+  symbol1: x: instruction1
+, symbol2: y: instruction2
 , ...
 END
 </pre>
