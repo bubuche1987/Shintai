@@ -161,10 +161,30 @@ END
 <h3>Control Flow</h3>
 <p>No recursion is allowed. Loops (<code>for</code>, <code>while</code>) and conditional statements (<code>if</code>) are suppororted:</p>
 
-<pre>IF expression: instruction</pre>
-<pre>FOR symbol in expression_start ... expression_end: instruction</pre>
-<pre>WHILE expression: instruction</pre>
+<pre>
+IF 
+  expression1: instruction1
+, expression2: instruction2
+, ...
+END
+</pre>
     
+<pre>
+FOR 
+  symbol in expression_start1 ... expression_end1: instruction1
+, symbol in expression_start2 ... expression_end2: instruction2
+, ...
+END
+</pre>
+    
+<pre>
+WHILE 
+  expression1: instruction1
+, expression2: instruction2
+, ...
+END
+</pre>
+
 <h3>Sum Types</h3>
 <pre>
 SUM_TYPE
@@ -179,6 +199,15 @@ END
 MATCH value WITH
   symbol1: x: statement1
 , symbol2: y: statement2
+, ...
+END
+</pre>
+
+<h3>Enums</h3>
+<pre>
+ENUM
+  symbol1: constant1
+, symbol2: constant2
 , ...
 END
 </pre>
