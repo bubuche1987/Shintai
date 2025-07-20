@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Programming Language Documentation</title>
 </head>
 <body>
@@ -58,6 +59,7 @@ END
 </pre>
 <p>Execution order: all <code>WITH</code> blocks are evaluated from last to first, then the <code>SET</code> block is applied.
 <code>WITH</code> blocks are optional.</p>
+<p>To swap <code>a</code> and <code>b</code> it's possible to write:</p>
 <pre>
 SET
   a: b
@@ -101,6 +103,7 @@ type^number_of_elements
 
 <h3>Functions</h3>
 <p>Functions take a single parameter and return a single value. Both can be tuples or vectors.</p>
+<p>Similarly, function bodies are made of a single instruction, but this instruction can be an instruction block.</p>
 
 <p>Function header declarations:</p>
 <pre>
