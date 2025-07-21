@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compilation Process</title>
+</head>
+<body>
+<h1>Compilation Process</h1>
+
+<h2>Overview</h2>
+<p>
+The compilation pipeline transforms source files written in the programming language into executable binaries. 
+It consists of multiple stages, each consuming the output of the previous one. 
+Intermediate results, such as the Abstract Syntax Tree (AST), persist through subsequent stages.
+</p>
+
+<p>
+The initial implementation is in JavaScript using the <em>peggy</em> parser generator (a fork of <em>peg.js</em>), 
+though a C implementation is planned.
+</p>
+
+<h2>Entry Points</h2>
+<p>
+Compilation begins with a set of source files that act as entry points, similar to Java’s multiple entry points. 
+Each file may depend on other modules, which are resolved during compilation.
+</p>
+
+<h2>Compilation Steps</h2>
+
+<h3>1. Parsing</h3>
+<ul>
+    <li><strong>Input:</strong> Source file.</li>
+    <li><strong>Output:</strong> Abstract Syntax Tree (AST).</li>
+    <li><strong>Details:</strong> Uses <em>peggy</em> to parse the source code into a structured AST representation.</li>
+</ul>
+
+<h3>2. Symbol Verification</h3>
+<ul>
+    <li><strong>Input:</strong> AST.</li>
+    <li><strong>Output:</strong> AST plus lists of imports and exports.</li>
+    <li><strong>Details:</strong> Verifies that all symbols are properly declared and identifies required imports and exported functions.</li>
+</ul>
+
+<h3>3. The "Airport"</h3>
+<ul>
+    <li><strong>Purpose:</strong> Manages module dependencies.</li>
+    <li><strong>Process:</strong>
+        <ul>
+            <li>When a module arrives, it registers its exports and declares required modules.</li>
+            <li>It is added to a <em>waiting room</em> until all dependencies are available.</li>
+            <li>Triggers the addition of missing dependencies to step 1.</li>
+            <li>Every module waits for itself, eliminating the need for special cases for modules with no dependencies.</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>4. Type Check and Auto Cast</h3>
+<ul>
+    <li><strong>Input:</strong> AST.</li>
+    <li><strong>Output:</strong> Modified AST (in-place).</li>
+    <li><strong>Details:</strong> Verifies type correctness and inserts implicit casts where required.</li>
+</ul>
+
+<h3>5. High-Level Intermediate Representation (IR)</h3>
+<ul>
+    <li><strong>Input:</strong> AST.</li>
+    <li><strong>Output:</strong> IR commands attached to functions in the AST.</li>
+    <li><strong>Details:</strong> Each function is compiled into a list of high-level IR commands, represented as JavaScript objects (struct-like, no methods).</li>
+</ul>
+
+<h3>6. Assembly Generation</h3>
+<ul>
+    <li><strong>Input:</strong> IR commands.</li>
+    <li><strong>Output:</strong> Assembly code (12-bit or 6-bit) attached to each function.</li>
+</ul>
+
+<h3>7. Executable Building</h3>
+<ul>
+    <li><strong>Input:</strong> Assembly code and module/function data.</li>
+    <li><strong>Output:</strong> Final executable file, including all required tables and metadata.</li>
+</ul>
+
+<h2>Notes and Limitations</h2>
+<ul>
+    <li>The current compiler is a first draft, sufficient to produce executables and run them in the VM.</li>
+    <li>Missing checks:
+        <ul>
+            <li>Detection of recursive calls.</li>
+            <li>Calculation of maximum stack usage per function call.</li>
+        </ul>
+    </li>
+    <li>Optimization opportunities not yet implemented:
+        <ul>
+            <li>Evaluating pure function calls with constant parameters at compile time.</li>
+            <li>More advanced code optimizations.</li>
+        </ul>
+    </li>
+</ul>
+
+</body>
+</html>
