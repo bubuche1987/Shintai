@@ -34,6 +34,16 @@ VARIABLES
 END
 </pre>
 
+<p>It's also possible to declare variables like this:</p>
+<pre>
+VARIABLES
+  name: expression
+, ...
+END
+</pre>
+
+<p>In that case, the type of the variable is inferred from the type of the expression.</p>
+
 <h3>Type Aliases</h3>
 <pre>
 TYPEDEFS
@@ -246,7 +256,7 @@ END
 <p>
 The language provides stack references ("pointers") that refer to variables on the stack. 
 Pointers cannot be assigned or returned, preventing dangling pointers.
-They can be passed to functions, and since assignments are forbidden, no invalid references persist after a function returns.
+They can be passed to functions and, since assignments are forbidden, no invalid references persist after a function returns.
 </p>
 
 </body>
