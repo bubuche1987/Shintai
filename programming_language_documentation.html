@@ -229,19 +229,18 @@ END
 <p><code>MATCH</code> can operate on sum types, enums and integers. It's possible to add a default option with <code>_</code>.</p>
 
 <h2>Operator Compatibility</h2>
-<p>Operators can be applied to tuples and vectors if they are compatible:</p>
+<p>Operators can be applied to values if they are compatible:</p>
 <ul>
     <li><strong>Tuples:</strong> Must have the same field names in the same order and compatible types.</li>
     <li><strong>Vectors:</strong> Must have the same length and compatible element types.</li>
+    <li><code>u8</code>, <code>i8</code>, <code>u16</code>, <code>i16</code>, <code>u32</code>, <code>i32</code>, <code>f32</code> are compatible with each other.</li>
+    <li><code>bool</code> is not compatible with any other type.</li>
+    <li>If the values are not of the same type, implicit casts are added <strong>if possible</strong>.</li>
 </ul>
 
-<p>Type compatibility:</p>
-<ul>
-    <li><code>u8</code>, <code>i8</code>, <code>u16</code>, <code>i16</code>, <code>u32</code>, <code>i32</code> are compatible with each other.</li>
-    <li><code>u8</code>, <code>i8</code>, <code>u16</code>, <code>i16</code> are compatible with <code>f32</code>.</li>
-    <li><code>f32</code> is only compatible with itself.</li>
-    <li><code>bool</code> is only compatible with itself.</li>
-</ul>
+<h2>Implicit casts</h2>
+<p>The rule is that implicit casts can be added if they are lossless. For example, if you add an u8 to an i8, both are casted to i16.</p>
+<p>There is no implicit cast between i32 and u32. Similarly, i32 and u32 cannot be casted to float.</p>
 
 <p>Operators also works on specific types. Examples:</p>
 <ul>
