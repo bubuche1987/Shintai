@@ -238,10 +238,6 @@ END
     <li>If the values are not of the same type, implicit casts are added <strong>if possible</strong>.</li>
 </ul>
 
-<h2>Implicit casts</h2>
-<p>The rule is that implicit casts can be added if they are lossless. For example, if you add an u8 to an i8, both are casted to i16.</p>
-<p>There is no implicit cast between i32 and u32. Similarly, i32 and u32 cannot be casted to float.</p>
-
 <p>Operators also works on specific types. Examples:</p>
 <ul>
     <li><code>||</code> works on <code>bool</code>.</li>
@@ -254,6 +250,12 @@ END
     <li><code>NONE</code>, which indicates if all the values are false.</li>
     <li><code>ANY</code>, which indicates if one or more values is true.</li>
 </ul>
+
+<p>These operators only work on tuples and vectors ultimately made of bools.</p>
+
+<h2>Implicit casts</h2>
+<p>The rule is that implicit casts can be added if they are lossless. For example, if you add an u8 to an i8, both are casted to i16.</p>
+<p>There is no implicit cast between i32 and u32. Similarly, i32 and u32 cannot be casted to float.</p>
 
 <h2>Pointers (References)</h2>
 <p>
