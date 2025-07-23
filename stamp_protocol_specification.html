@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAMP Protocol Specification</title>
+</head>
+<body>
+    <h1>STAMP Protocol Specification</h1>
+
+    <h2>Version 1.0</h2>
+    <p>
+        STAMP is a binary protocol designed as a teaching tool, targeting microcontrollers and license-level students.
+        It uses a fixed resolution of <strong>128×128 units</strong>, with all integers encoded in <em>Variable Length Encoding (VLE)</em>.
+        It begins with a magic string <code>STAMP</code>, followed by the protocol <em>major</em> and <em>minor</em> versions, and an optional <em>ticket</em>.
+    </p>
+
+    <h3>Resources</h3>
+    <ul>
+        <li><strong>Character buffer:</strong> 255 bytes.</li>
+        <li><strong>Pixel buffer:</strong> 256 bytes, 4 bits per pixel (2 pixels/byte).</li>
+        <li><strong>Rectangles:</strong> 42 entries, 6 bytes each (x, y, z, color, width, height).</li>
+        <li><strong>Lines:</strong> 42 entries, 6 bytes each (x, y, z, color, dx, dy).</li>
+        <li><strong>Points:</strong> 64 entries, 4 bytes each (x, y, z, color).</li>
+        <li><strong>Texts:</strong> 36 entries, 7 bytes each (x, y, z, color, offset, length, alignment).</li>
+        <li><strong>Images:</strong> variable number, 3D position, color (dithering only), offset in pixel buffer, width, height.</li>
+        <li><strong>Palette:</strong> 16 colors, with index 0 transparent.</li>
+    </ul>
+
+    <h3>Commands</h3>
+    <p>Server-to-client commands include:</p>
+    <ul>
+        <li>Update buffers and primitives (e.g., <code>define_filled_rectangle rectangle_id x y z color width height</code>).</li>
+        <li><code>clear_all</code> — resets all resources.</li>
+        <li><code>render</code> — triggers client-side rendering.</li>
+        <li><code>connect_to ip_address ticket</code> — reconnect to another server with a ticket.</li>
+    </ul>
+    <p>Client-to-server commands include only:</p>
+    <ul>
+        <li><code>click x y</code> — reports a user click/touch event.</li>
+    </ul>
+
+    <h2>Version 1.1 Changes</h2>
+    <p>
+        Version 1.1 refines STAMP by removing individual points as standalone resources and adding a <strong>positions buffer</strong>, 
+        where each entry consists of two bytes (<em>x, y</em>).
+    </p>
+
+    <h3>New Resources</h3>
+    <ul>
+        <li><strong>Positions buffer:</strong> stores coordinate pairs (x, y), 2 bytes each.</li>
+        <li><strong>Polygons:</strong> z, color, offset, and length in the positions buffer.</li>
+        <li><strong>Point clouds:</strong> z, color, offset, and length in the positions buffer.</li>
+        <li><strong>Pie charts:</strong> center (x, y, z), color, start angle (2 bytes), end angle (2 bytes). Angles range from 0 to 2<sup>16</sup> ≈ 360°.</li>
+    </ul>
+
+    <h2>Version 3.0 Changes</h2>
+    <p>
+        Version 3 builds on v1.1, optimizing for local execution where the server and client run on the same machine. 
+        The main differences include:
+    </p>
+    <ul>
+        <li><strong>Resolution:</strong> increased to <strong>160×144 units</strong> (Game Boy resolution).</li>
+        <li><strong>Pixel buffer:</strong> resized to accommodate the new resolution; number of images and other resources adjusted.</li>
+        <li><strong>Rectangles:</strong> possibly reduced in number due to limited relevance for gaming.</li>
+        <li><strong>Direct buffer access:</strong> support for shared memory mechanisms (e.g., MIT-SHM-like) for faster buffer updates.</li>
+        <li><strong>Audio support:</strong> new commands to handle audio playback and manipulation.</li>
+        <li><strong>Input handling:</strong> 
+            <ul>
+                <li><code>connect_to</code> command removed.</li>
+                <li>Click mechanism replaced with comprehensive <strong>gamepad input events</strong>, reporting joystick movements and button state changes.</li>
+            </ul>
+        </li>
+    </ul>
+</body>
+</html>
