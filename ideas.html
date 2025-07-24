@@ -23,6 +23,7 @@ Normal “bad outcomes” are still handled via returned values, typically with 
   <li>Functions are the only entities that can catch errors. There are no <code>try...catch</code> blocks inside the code.</li>
   <li>Each function may optionally declare a <code>CATCHES</code> block, which defines how it reacts to specific error types.</li>
   <li>The catching function typically should wrap the error into a sum type (e.g., <code>Success: value | Error: error_code</code>) and return the wrapped error.</li>
+  <li>If a function catches an error but doesn't <code>return</code> in the corresponding indtruction, the error will propagate. It's the very act of returning that stops the propagation of the error.</li>
 </ul>
 
 <h3>Language Syntax</h3>
