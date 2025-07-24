@@ -28,9 +28,6 @@ Normal “bad outcomes” are still handled via returned values, typically with 
 </ul>
 
 <h3>Language Syntax</h3>
-
-<p>A <code>MATCH</code> expression for normal result handling already exists:</p>
-
 <p>Functions that handle errors use <code>CATCHES</code>:</p>
 <pre>
 FUNCTION_BODIES
@@ -46,7 +43,7 @@ END
 
 <p>
 The <code>CATCHES</code> block is like a series of <code>if...elseif</code> conditions for error types, with <code>_</code> as a catch-all.
-If no matching handler is found, the error propagates up to the caller.
+If no matching handler is found, or if the handler doesn't return, the error propagates up to the caller.
 </p>
 
 <h3>Compiler Responsibilities</h3>
