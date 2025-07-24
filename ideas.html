@@ -19,8 +19,8 @@ Normal “bad outcomes” are still handled via returned values, typically with 
 
 <h3>Concept Overview</h3>
 <ul>
-  <li>Errors are exceptional</li>
-  <li>"Implicit errors" are, for example, division by zero, vector out-of-bounds, invalid magic number or exceeding the instruction count per frame.</li>
+  <li>Errors are exceptional.</li>
+  <li>"Implicit errors" are, for example, division by zero, vector out-of-bounds, invalid magic number or exceeding the instruction count per frame. Their type is <code>(error:(), code:u16)</code>.</li>
   <li>Functions are the only entities that can catch errors. There are no <code>try...catch</code> blocks inside the code.</li>
   <li>Each function may optionally declare a <code>CATCHES</code> block, which defines how it reacts to specific error types.</li>
   <li>The catching function typically should wrap the error into a sum type (e.g., <code>Success: value | Error: error_code</code>) and return the wrapped error.</li>
@@ -51,9 +51,7 @@ If no matching handler is found, the error propagates up to the caller.
 
 <h3>Compiler Responsibilities</h3>
 <ul>
-  <li>
-    The compiler collects all error types that can be thrown or caught.
-    Implicit errors are of type <code>(error:(), code:u16)</code>.</li>
+  <li>The compiler collects all error types that can be thrown or caught.</li>
   <li>It creates a global table:
     <ul>
       <li>Implicit <code>typeid</code> column</li>
