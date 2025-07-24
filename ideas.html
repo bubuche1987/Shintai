@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ideas</title>
-  
 </head>
 <body>
 
@@ -50,7 +49,7 @@ If no matching handler is found, the error propagates up to the caller.
 
 <h3>Compiler Responsibilities</h3>
 <ul>
-  <li>The compiler collects all error types that can be thrown or caught.</li>
+  <li>The compiler collects all error types that can be thrown or caught. Errors are of type "( error:(), code:u16 )".</li>
   <li>It creates a global table:
     <ul>
       <li>Implicit <code>typeid</code> column</li>
