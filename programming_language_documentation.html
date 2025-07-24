@@ -274,5 +274,11 @@ For example:
     <li><strong>@nodiscard</strong>: indicates the result of a function mustn't be discarded.</li>
 </ul>
 
+<h1>Notes</h1>
+<ul>
+    <li>Error handling should be done with a combination of sum types (indicating either the result or an error) and the annotation @nodiscard.</li>
+    <li>As is the language does not offer constants. However, a compiler should evaluate pire function calls with constant parameters at compile time. I'll maybe add an annotation <strong>@const</strong>.</li>
+</ul>
+    
 </body>
 </html>
