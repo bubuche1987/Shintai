@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ideas</title>
+  
+</head>
+<body>
+
+<h1>Ideas</h1>
+
+<h2>Error Handling Mechanism</h2>
+
+<p>
+This idea introduces a simple but powerful error handling mechanism for the language.
+The design philosophy is that errors represent <strong>unexpected conditions</strong>, not ordinary planned failure modes.
+Normal “bad outcomes” are still handled via returned values, typically with <code>MATCH</code> expressions on sum types.
+</p>
+
+<h3>Concept Overview</h3>
+<ul>
+  <li><strong>Errors are exceptional</strong>: e.g., division by zero, vector out-of-bounds, invalid magic number.</li>
+  <li>Functions are the only entities that can catch errors. There are no <code>try...catch</code> blocks inside the code.</li>
+  <li>Each function may optionally declare a <code>CATCHES</code> block, which defines how it reacts to specific error types.</li>
+  <li>The catching function typically should wrap the error into a sum type (e.g., <code>Success: value | Error: error_code</code>) and return the wrapped error.</li>
+</ul>
+
+<h3>Language Syntax</h3>
+
+<p>A <code>MATCH</code> expression for normal result handling already exists:</p>
+
+<p>Functions that handle errors use <code>CATCHES</code>:</p>
+<pre>
+FUNCTION_BODIES
+  name1: instruction1
+, ...
+, name2: instruction2 CATCHES
+    x: type1: instruction3
+  , y: type2: instruction4
+  , _: instruction_default
+  END
+END
+</pre>
+
+<p>
+The <code>CATCHES</code> block is like a series of <code>if...elseif</code> conditions for error types, with <code>_</code> as a catch-all.
+If no matching handler is found, the error propagates up to the caller.
+</p>
+
+<h3>Compiler Responsibilities</h3>
+<ul>
+  <li>The compiler collects all error types that can be thrown or caught.</li>
+  <li>It creates a global table:
+    <ul>
+      <li>Implicit <code>typeid</code> column</li>
+      <li><code>length_in_bytes</code> column</li>
+    </ul>
+  </li>
+  <li>Functions capable of catching errors are stored first in their module; the module records the number of such functions.</li>
+  <li>The catching code is stored right after the function.</li>
+</ul>
+
+<h3>Runtime Implementation</h3>
+
+<p>To raise an error:</p>
+<ol>
+  <li>Push the error payload (data visible to the program) on the stack.</li>
+  <li>Push the <code>typeid</code> of the error.</li>
+  <li>Call a special <code>syscall</code> for error throwing.</li>
+</ol>
+
+<p>The syscall then:</p>
+<ol>
+  <li>Unwinds the stack, function by function.</li>
+  <li>For each function:
+    <ul>
+      <li>Checks if the function has a <code>CATCHES</code> block.</li>
+      <li>If yes, jumps to the catching sequence (series of type checks and associated instructions).</li>
+      <li>If no handler matches, continues unwinding and rethrows the error.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>This mechanism is invisible at the language level: the developer only writes <code>CATCHES</code> blocks, while the runtime performs stack unwinding and handler matching.</p>
+
+</body>
+</html>
