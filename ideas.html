@@ -82,5 +82,55 @@ If no matching handler is found, or if the handler doesn't return, the error pro
 
 <p>This mechanism is invisible at the language level: the developer only writes <code>CATCHES</code> blocks, while the runtime performs stack unwinding and handler matching.</p>
 
+<h2>Generics and <code>?</code></h2>
+
+<p>The idea is twofold. The first part is to introduce generic types:</p>
+<pre>
+TYPEDEFS
+  vector_of_five&lt;T&gt;: T^5
+END
+</pre>
+
+<p>Then, the meta-types <code>Result</code> and <code>Option</code> would be defined:</p>
+<pre>
+TYPEDEFS
+  Result&lt;T,E&gt;: (
+    Success:T,
+  | Error:E
+  )
+, Option&lt;T&gt;: (
+    Some:T,
+  | None:()
+  )
+END
+</pre>
+
+<p>
+  Once this is done, we can introduce the <code>?</code> operator.
+  The idea is that this operator either unwrap the value or return what is given to it.
+</p>
+
+<pre>
+SET
+  foo: bar?
+END
+</pre>
+
+<p>It would be a shorthand for:</p>
+
+<pre>
+MATCH bar WITH
+  Success:x: SET foo: x END
+, Error:_: return bar
+END
+</pre>
+
+<p>Or:</p>
+MATCH bar WITH
+  Some:x: SET foo: x END
+, None:_: return bar
+END
+<pre>
+  
 </body>
 </html>
