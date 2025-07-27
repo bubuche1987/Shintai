@@ -182,8 +182,7 @@ BEGIN
   ...
   RESOURCES
     r: Resource&lt;File&gt;
-  END
-  RESOURCE_BLOCK
+  BEGIN
     instruction3;
     ...
     instruction4;
@@ -195,6 +194,12 @@ END
 <p>
   This additional frame on the stack would let the exception handling mechanism call the destructor for the resource.
   Resources should be rare in the program anyway. Not all the types will have a destructor attached to them.
+  Also, if several resources are declared in the same block, only one "resource block" is needed.
+</p>
+
+<p>
+  The destructors part should be followed by an <code>if</code> to determine if where the execution should continue.
+  It will be added by the compiler.
 </p>
 
 </body>
