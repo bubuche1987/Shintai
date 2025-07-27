@@ -145,25 +145,28 @@ END
 
 <p>
   Unlike in C++, this PL has implicit errors. 
-  In C++, divisions by zero are Undefined behavior. In this PL they raise an error.
+  In C++, divisions by zero are Undefined Behavior. In this PL they raise an error.
   There could even be an exception raised at any instruction if it exceeds the instructions count.
 </p>
 
 <p>
-  Similarly, the operator <code>?</code> introduce early returns everywhere it is used.
+  Similarly, the operator <code>?</code> introduces early returns everywhere it is used.
 </p>
 
 <p>
-  To solve that, the idea is to introduce additional layers in the frames stack. Instead of having just one frame by function call, there could ve an additional frame per resource.
-  Declaring a resource would create a "resource block" containing the rest of the instruction block. This "resource block" would be our additional frame.
+  To solve that, the idea is to introduce additional layers in the frames stack. Instead of having just one frame by function call, there could be an additional frame per resource.
+  Declaring a resource would create a "resource block" containing the rest of the instruction block. 
+  This "resource block" would be our additional frame.
 </p>
 
 <pre>
 BEGIN
   instruction1;
-  indtruction2;
+  instruction2;
   ...
-  Resource r;
+  RESOURCES
+    r: Resource&lt;File&gt;
+  END
   instruction3;
   ...
   instruction4;
@@ -175,9 +178,11 @@ END
 <pre>
 BEGIN
   instruction1;
-  ibstruction2;
+  instruction2;
   ...
-  Resource r;
+  RESOURCES
+    r: Resource&lt;File&gt;
+  END
   RESOURCE_BLOCK
     instruction3;
     ...
