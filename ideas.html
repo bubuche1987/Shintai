@@ -173,7 +173,7 @@ BEGIN
 END
 </pre>
 
-<p>would become:</p>
+<p>would become, at compile time, something like:</p>
 
 <pre>
 BEGIN
@@ -194,7 +194,7 @@ END
 <p>
   This additional frame on the stack would let the exception handling mechanism call the destructor for the resource.
   Resources should be rare in the program anyway. Not all the types will have a destructor attached to them.
-  Also, if several resources are declared in the same block, only one "resource block" is needed.
+  Also, if several resources are declared in the same <code>RESOURCES</code>, only one "resource block" is needed.
 </p>
 
 <p>
