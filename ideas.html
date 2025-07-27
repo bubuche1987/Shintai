@@ -134,7 +134,63 @@ MATCH bar WITH
 END
 </pre>
 
-<p>However, the operator <code>?</code> is problematic: in the absence of a <code>defer</code> statement, it's an invitation to leak resources, as it does a <code>return</code> without giving the possibility to cleanup resources.</p>
-  
+<h2>Destructors</h2>
+
+<p>
+  The problem with the two previous ideas is that they exit the function without cleaning up the resources used.
+  <strong>There are currently no resources</strong> in the PL, so it's not a real problem, but they'll eventually arrive.
+  The idea presented here is to simply introduce destructors for those resources.
+  But it's not that simple.
+</p>
+
+<p>
+  Unlike in C++, this PL has implicit errors. 
+  In C++, divisions by zero are Undefined behavior. In this PL they raise an error.
+  There could even be an exception raised at any instruction if it exceeds the instructions count.
+</p>
+
+<p>
+  Similarly, the operator <code>?</code> introduce early returns everywhere it is used.
+</p>
+
+<p>
+  To solve that, the idea is to introduce additional layers in the frames stack. Instead of having just one frame by function call, there could ve an additional frame per resource.
+  Declaring a resource would create a "resource block" containing the rest of the instruction block. This "resource block" would be our additional frame.
+</p>
+
+<pre>
+BEGIN
+  instruction1;
+  indtruction2;
+  ...
+  Resource r;
+  instruction3;
+  ...
+  instruction4;
+END
+</pre>
+
+<p>would become:</p>
+
+<pre>
+BEGIN
+  instruction1;
+  ibstruction2;
+  ...
+  Resource r;
+  RESOURCE_BLOCK
+    instruction3;
+    ...
+    instruction4;
+  END
+  # call to the destructor of r
+END
+</pre>
+
+<p>
+  This additional frame on the stack would let the exception handling mechanism call the destructor for the resource.
+  Resources should be rare in the program anyway. Not all the types will have a destructor attached to them.
+</p>
+
 </body>
 </html>
