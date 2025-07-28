@@ -109,7 +109,7 @@ type^number_of_elements
 , ...
 )
 </pre>
-<p>Minimum vector size is 2. Maximum size is (2^16)-1.</p>
+<p>Minimum vector size is 2. Maximum size is (2^16)-1. This maximum size is theoric, as it's the maximum size of the stack/program.</p>
 
 <h3>Functions</h3>
 <p>Functions take a single parameter and return a single value. Both can be tuples or vectors.</p>
@@ -266,6 +266,10 @@ They can be passed to functions.
 
 <p>
 Whether the pointer is a simple address (<code>u16</code>) or a pair "address+length" is still TBD.
+</p>
+
+<p>
+Pointers exist mainly for strings. It is, for the moment, the only case I identified where having a single function accepting data of variable length is highly desirable.
 </p>
 
 <h2>Annotations</h2>
