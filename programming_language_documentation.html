@@ -109,7 +109,7 @@ type^number_of_elements
 , ...
 )
 </pre>
-<p>Minimum vector size is 2.</p>
+<p>Minimum vector size is 2. Maximum size is (2^16)-1.</p>
 
 <h3>Functions</h3>
 <p>Functions take a single parameter and return a single value. Both can be tuples or vectors.</p>
@@ -261,7 +261,11 @@ END
 <p>
 The language provides stack references ("pointers") that refer to variables on the stack. 
 Pointers cannot be assigned or returned, preventing dangling pointers.
-They can be passed to functions and, since assignments are forbidden, no invalid references persist after a function returns.
+They can be passed to functions.
+</p>
+
+<p>
+Whether the pointer is a simple address (<code>u16</code>) or a pair "address+length" is still TBD.
 </p>
 
 <h2>Annotations</h2>
