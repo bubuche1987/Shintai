@@ -198,7 +198,9 @@ END
 </p>
 
 <p>
-  The destructors part should be followed by an <code>if</code> to determine if where the execution should continue.
+  The destructors part should be followed by an <code>if</code> to determine where the execution should continue.
+  This is because the same block of code will be executed whether we exit the "resource block" naturally (reaching its end), because we <code>break</code>, <code>continue</code>, encounter an error, or <code>return</code>.
+  One byte should be allocated statically to contain that information, and be filled when a jump instruction is encountered.
   It will be added by the compiler.
 </p>
 
