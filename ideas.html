@@ -199,7 +199,7 @@ END
 
 <p>
   The destructors part should be followed by an <code>if</code> to determine where the execution should continue.
-  This is because the same block of code will be executed whether we exit the "resource block" naturally (reaching the end of the instructions block before it), because we <code>break</code>, <code>continue</code>, encounter an error, or <code>return</code>, explicitly or via the operator <code>?</code>.
+  This is because the same block of code will be executed whether we exit the "resource block" naturally (reaching the end of the resource block before it), because we <code>break</code>, <code>continue</code>, encounter an error, or <code>return</code>, explicitly or via the operator <code>?</code>.
   One byte should be allocated per thread to contain that information, and be filled when a jump instruction is encountered.
   However, as there is no such thing as "per thread" in that language, it should be allocated in each function containing one or more "resource blocks".
   It will be added by the compiler.
