@@ -265,12 +265,17 @@ They can be passed to functions.
 </p>
 
 <p>
-Whether the pointer is a simple address (<code>u16</code>) or a pair "address+length" is still TBD.
+Pointers exist mainly for strings. It is, for the moment, the only case I identified where having a single function accepting data of variable length is highly desirable.
 </p>
 
 <p>
-Pointers exist mainly for strings. It is, for the moment, the only case I identified where having a single function accepting data of variable length is highly desirable.
+Whether the pointer is a simple address (<code>u16</code>) or a pair "address+length" is still TBD:
 </p>
+
+<ul>
+    <li>If it's an address+a length, it's specifically for arrays of variable lengths.</li>
+    <li>If it's just an address, and the length exists at this address alongside the data, it introduces an object-like notion, that could be extended to other objects later.</li>
+</ul>
 
 <h2>Annotations</h2>
 <p>
