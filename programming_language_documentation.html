@@ -171,8 +171,9 @@ END
 <p><code>in_name</code> represents the name as seen from inside the module, <code>out_name</code> the name as seen from the outside of the module.</p>
 
 <h3>Control Flow</h3>
-<p>No recursion is allowed. Loops (<code>for</code>, <code>while</code>) and conditional statements (<code>if</code>) are suppororted:</p>
+<p>No recursion is allowed. Loops (<code>for</code>) and conditional statements (<code>if</code>) are supported:</p>
 
+<h4><code>IF</code></h4>
 <pre>
 IF 
   condition1: instruction1
@@ -185,7 +186,8 @@ END
 <code>IF</code> tests the conditions sequentially until one if found true. 
 It then executes the corresponding instruction. Further conditions are not evaluated.
 </p>
-    
+
+<h4><code>FOR</code></h4>
 <pre>
 FOR 
   symbol1 : start1 ... end1: instruction1
@@ -201,15 +203,14 @@ The symbol is immutable, except by the loop itself.
 This guarantees the loop will end.
 </p>
 
-<s>
+<h4><code>WHILE</code></h4>
 <pre>
-WHILE 
+<s>WHILE
   condition1: instruction1
 , condition2: instruction2
 , ...
-END
+END</s>
 </pre>
-</s>
 
 <p>
 There is no <code>WHILE</code> loop in this programming language.
