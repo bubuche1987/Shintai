@@ -180,15 +180,28 @@ IF
 , ...
 END
 </pre>
+
+<p>
+<code>IF</code> tests the conditions sequentially until one if found true. 
+It then executes the corresponding instruction. Further conditions are not evaluated.
+</p>
     
 <pre>
 FOR 
-  symbol in start1 ... end1: instruction1
-, symbol in start2 ... end2: instruction2
+  symbol1 : start1 ... end1: instruction1
+, symbol2 : start2 ... end2: instruction2
 , ...
 END
 </pre>
-    
+
+<p>
+<code>FOR</code> executes the loops it contains in any order, possibly in parallel or in a interleaved way.
+The symbol starts at the scalar "start" and continues until the scalar "end" is reached.
+The symbol is immutable, except by the loop itself.
+This guarantees the loop will end.
+</p>
+
+<s>
 <pre>
 WHILE 
   condition1: instruction1
@@ -196,6 +209,12 @@ WHILE
 , ...
 END
 </pre>
+</s>
+
+<p>
+There is no <code>WHILE</code> loop in this programming language.
+They may be added later, but should then have a proof they'll end.
+</p>
 
 <h3>Sum Types</h3>
 <pre>
