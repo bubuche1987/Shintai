@@ -209,13 +209,13 @@ END
 
 <h3>Single resource frame</h3>
 <p>
-  It's possible to simplify that design with a system where every resource add a layer on the stack frame.
-  This layer will indicate which resource was allocated and where, and the VM can call the destructor itself.
+  It's possible to simplify that design with a system where every resource adds a layer on the stack of frames.
+  This layer will indicate which resource was allocated and where, and the VM will be able to call the destructor itself.
   It removes the risk of an error being raised while we invoke destructors.
   It also removes the need to the byte indicating why we jump: before a jump (a <code>break</code> or <code>continue</code>) the code will simply pop the required number of stack layers.
 </p>
 
-<p>This approach, if considerably simpler, increase the number of layers on the stack.</p>
+<p>This approach, if considerably simpler, increases the number of layers on the stack.</p>
 
 </body>
 </html>
