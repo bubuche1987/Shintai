@@ -215,7 +215,16 @@ END
   It also removes the need to the byte indicating why we jump: before a jump (a <code>break</code> or <code>continue</code>) the code will simply pop the required number of stack layers.
 </p>
 
-<p>This approach, if considerably simpler, increases the number of layers on the stack.</p>
+<p>
+  This approach, if considerably simpler, increases the number of layers on the stack.
+  We can partially solve this issue by allowing several resources to be stored on the same stack frame.
+  It would work like this:
+</p>
+
+<ul>
+  <li>If the type of the frame is <code>00</code>, it's a function frame and we deal with it like before.</li>
+  <li>Otherwise, the "type of the frame" byte contains the number of resources, and is followed by as many pairs of (address, resource_type). The VM pops each pair and calls the corresponding destructor.</li>
+</ul>
 
 </body>
 </html>
