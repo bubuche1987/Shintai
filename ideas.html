@@ -226,5 +226,25 @@ END
   <li>Otherwise, the "type of the frame" byte contains the number of resources, and is followed by as many pairs of (address, resource_type). The VM pops each pair and calls the corresponding destructor.</li>
 </ul>
 
+<h2>Counting upward jumps</h2>
+
+<p>
+  As it's described, the VM has to count every instruction and test, each time, if the number of instructions exceeds a certain value.
+  While it works, it means that every instruction costs significantly more than it should.
+</p>
+
+<p>
+  Ideally the hardware would help us, counting that and triggering a panic when the value reaches a certain threshold (or zero if it decrements).
+  But even without help from the hardware we can improve that if we accept a program will run for more or less than the number of instructions given to it.
+</p>
+
+<p>
+  If we want to avoid infinite loops, we can simply count the jumps upward, aka to an instruction before the current instruction, aka to a smaller <code>pc</code>.
+  An even more refined system is to, when we jump, count the number of instructions since the last jumped.
+  This is given by <code>current_pc - previous_pc</code>.
+  If we test this count isn't exceeding in those cases, we keep verifying the program isn't exceeding this count "too much".
+  Finally, we can compute, at compile time, the max distance between two jumps and subtract this distance from the number of instructions given to the program, if we want to guarantee it doesn't exceed it.
+</p>
+
 </body>
 </html>
